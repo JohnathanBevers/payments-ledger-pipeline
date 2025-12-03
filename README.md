@@ -21,6 +21,7 @@ To publish sample events after the stack is up:
 ```bash
 ./scripts/produce_sample_events.sh
 ```
+The script uses `kafka-console-producer` if you have Kafka CLIs locally. If not, it automatically falls back to `docker compose exec kafka` so you can run it as long as the compose stack is up.
 
 ## Replaying and reconciling
 Replays are safe because duplicate `eventId` values are skipped via the database constraint. Use the reconciliation endpoint to inspect daily totals:
