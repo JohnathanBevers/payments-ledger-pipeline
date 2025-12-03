@@ -36,10 +36,13 @@ public class LedgerService {
         }
     }
 
+    /**
+     * Computes reconciliation totals for the given date range, inclusive of both start and end dates.
+     */
     @Transactional(readOnly = true)
-    public List<ReconciliationReport> reconciliationForRange(LocalDate startInclusive, LocalDate endExclusive) {
+    public List<ReconciliationReport> reconciliationForRange(LocalDate startInclusive, LocalDate endInclusive) {
         OffsetDateTime start = startInclusive.atStartOfDay().atOffset(ZoneOffset.UTC);
-        OffsetDateTime end = endExclusive.atStartOfDay().atOffset(ZoneOffset.UTC);
-        return repository.dailyTotals(start, end);
+        OffsetDateTime endExclusive = endInclusive.plusDays(1).atStartOfDay().atOffset(ZoneOffset.UTC);
+        return repository.dailyTotals(start, endExclusive);
     }
 }

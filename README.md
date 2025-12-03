@@ -6,7 +6,8 @@ in a Java Spring Boot service, and stores them in Postgres as a reliable ledger.
 ## What you get
 - Spring Boot 3 service (`/app`) that consumes `payment_events` from Kafka and writes immutable ledger entries to Postgres
 - Idempotency enforced through a unique constraint on `event_id`
-- Reconciliation endpoint `/reconciliation?start=YYYY-MM-DD&end=YYYY-MM-DD&format=json|csv` returning daily totals by event type
+- Reconciliation endpoint `/reconciliation?start=YYYY-MM-DD&end=YYYY-MM-DD&format=json|csv` returning daily totals by event type.
+  The `end` date is inclusive, so `start=2024-01-01&end=2024-01-03` includes January 1st through 3rd.
 - Flyway migrations in `app/src/main/resources/db/migration`
 - Docker Compose stack for Kafka + Zookeeper + Postgres + the application
 - Helper script to publish sample events with `kafka-console-producer`
