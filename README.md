@@ -17,6 +17,11 @@ docker compose up --build
 ```
 The app listens on `http://localhost:8080`. Kafka is on `localhost:9092`, Postgres on `localhost:5432` (user/password: `payments`).
 
+### Startup order and health checks
+- Kafka waits for Zookeeper and exposes a health check via `kafka-broker-api-versions --bootstrap-server kafka:29092`.
+- Postgres now uses a health check that runs `pg_isready` and a simple `SELECT 1` so the schema is reachable before the app starts.
+- The Spring Boot app uses `depends_on` with `condition: service_healthy` for Kafka and Postgres, so it will only start after both dependencies pass their health checks. This lets you rely on `docker compose up` to bring everything up in the right order without manual retries.
+
 To publish sample events after the stack is up:
 ```bash
 ./scripts/produce_sample_events.sh
