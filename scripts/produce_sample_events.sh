@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BOOTSTRAP=${KAFKA_BOOTSTRAP:-localhost:9092}
+HOST_BOOTSTRAP=${KAFKA_BOOTSTRAP:-localhost:9092}
+CONTAINER_BOOTSTRAP=${KAFKA_BOOTSTRAP_FOR_CONTAINER:-kafka:29092}
+BOOTSTRAP=$HOST_BOOTSTRAP
 TOPIC=payment_events
 
 events='{"eventId":"evt-1","occurredAt":"2024-01-01T10:00:00Z","type":"AUTHORIZED","amountCents":1000,"currency":"USD","paymentId":"pay-123","customerId":"cust-1"}
@@ -28,7 +30,7 @@ if command -v kafka-console-producer >/dev/null 2>&1; then
   printf "%s" "$events" | kafka-console-producer --bootstrap-server "$BOOTSTRAP" --topic "$TOPIC"
 elif run_compose ps >/dev/null 2>&1; then
   echo "kafka-console-producer not found locally; sending via docker compose exec kafka"
-  printf "%s" "$events" | run_compose exec -T kafka bash -lc "kafka-console-producer --bootstrap-server '$BOOTSTRAP' --topic '$TOPIC'"
+  printf "%s" "$events" | run_compose exec -T kafka bash -lc "kafka-console-producer --bootstrap-server '$CONTAINER_BOOTSTRAP' --topic '$TOPIC'"
 else
   echo "kafka-console-producer not available locally and docker compose not detected. Install Kafka CLIs or run within the compose stack." >&2
   exit 1

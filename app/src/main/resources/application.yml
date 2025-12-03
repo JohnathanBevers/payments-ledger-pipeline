@@ -14,7 +14,7 @@ spring:
           lob:
             non_contextual_creation: true
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP:kafka:9092}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:kafka:29092}
     consumer:
       group-id: payment-ledger-service
       auto-offset-reset: earliest
